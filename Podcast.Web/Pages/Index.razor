@@ -10,7 +10,7 @@
 
     @if (Enseignant != null)
     {
-        <PodcastBrowser @bind-PlayList="PlayList" @bind-Enseignant="Enseignant"/>
+        <PodcastBrowser @bind-PlayList="PlayList"/>
     }
 </div>
 
@@ -26,10 +26,7 @@
         Enseignant = enseignant;
         await LoadPlayListAsync(enseignant);
     }
-
-    protected Task OnPodcastAdded(Enseignant enseignant)
-        => LoadPlayListAsync(enseignant);
-
+    
     private async Task LoadPlayListAsync(Enseignant enseignant)
         => PlayList = await studentRepository.LoadPlaylist(enseignant);
 }

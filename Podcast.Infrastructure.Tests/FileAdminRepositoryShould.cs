@@ -57,7 +57,7 @@ namespace Podcast.Infrastructure.Tests
         public void NotThrowExceptionWhenTryingToSaveEpisodeOnEmptyFile()
         {
 
-            var episode = new Episode(new EpisodeName("Test01"), new EpisodeTitle("Episode 1"), new PublicationDate(new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day - 1)));
+            var episode = new Episode(new EpisodeName("Test01"), new EpisodeTitle("Episode 1"), new PublicationDate(new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day - 1)), "");
 
             Assert.DoesNotThrow(() => adminRepository.PublishEpisode(Enseignant1, episode));
             Assert.IsTrue(File.Exists(pathProvider.GetSaveFileName(Enseignant1)));
@@ -68,8 +68,8 @@ namespace Podcast.Infrastructure.Tests
         public void NotThrowExceptionWhenTryingToSaveEpisodeOnNonEmptyFile()
         {
 
-            var episode1 = new Episode(new EpisodeName("Test01"), new EpisodeTitle("Episode 1"), new PublicationDate(new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day - 1)));
-            var episode2 = new Episode(new EpisodeName("Test02"), new EpisodeTitle("Episode 1"), new PublicationDate(new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day + 10)));
+            var episode1 = new Episode(new EpisodeName("Test01"), new EpisodeTitle("Episode 1"), new PublicationDate(new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day - 1)), "");
+            var episode2 = new Episode(new EpisodeName("Test02"), new EpisodeTitle("Episode 1"), new PublicationDate(new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day + 10)), "");
 
             Assert.DoesNotThrow(() => adminRepository.PublishEpisode(Enseignant1, episode1));
             Assert.DoesNotThrow(() => adminRepository.PublishEpisode(Enseignant1, episode2));
@@ -80,8 +80,8 @@ namespace Podcast.Infrastructure.Tests
         [Test]
         public void SaveAndLoadEpisode()
         {
-            var episode1 = new Episode(new EpisodeName("Test01"), new EpisodeTitle("Episode 1"), new PublicationDate(new DateTime(2020, 1, 1)));
-            var episode2 = new Episode(new EpisodeName("Test02"), new EpisodeTitle("Episode 1"), new PublicationDate(new DateTime(2020, 1, 1)));
+            var episode1 = new Episode(new EpisodeName("Test01"), new EpisodeTitle("Episode 1"), new PublicationDate(new DateTime(2020, 1, 1)),"");
+            var episode2 = new Episode(new EpisodeName("Test02"), new EpisodeTitle("Episode 1"), new PublicationDate(new DateTime(2020, 1, 1)), "");
 
             adminRepository.PublishEpisode(Enseignant1, episode1);
             adminRepository.PublishEpisode(Enseignant1, episode2);

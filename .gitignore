@@ -339,3 +339,4 @@ ASALocalRun/
 # BeatPulse healthcheck temp database
 healthchecksdb
 /Podcast.Web/wwwroot/Content
+/Podcast.Web/.config/dotnet-tools.json

@@ -49,7 +49,7 @@ namespace Podcast.Infrastructure.Tests
         {
             
 
-            var episode = new Episode(new EpisodeName("Test01"), new EpisodeTitle("Episode 1"), new PublicationDate(new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day - 1)));
+            var episode = new Episode(new EpisodeName("Test01"), new EpisodeTitle("Episode 1"), new PublicationDate(new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day - 1)),"");
 
             adminRepository.PublishEpisode(Enseignant1, episode);
 
@@ -61,7 +61,7 @@ namespace Podcast.Infrastructure.Tests
         [Test]
         public void RetrieveTodayPublishedEpisode()
         {
-            var episode = new Episode(new EpisodeName("Test01"), new EpisodeTitle("Episode 1"), new PublicationDate(DateTime.Now));
+            var episode = new Episode(new EpisodeName("Test01"), new EpisodeTitle("Episode 1"), new PublicationDate(DateTime.Now), "");
 
             adminRepository.PublishEpisode(Enseignant1, episode);
 
@@ -73,8 +73,8 @@ namespace Podcast.Infrastructure.Tests
         [Test]
         public void RetrieveOrderedEpisode()
         {
-            var episode1 = new Episode(new EpisodeName("Test01"), new EpisodeTitle("Episode 1"), new PublicationDate(new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day - 10)));
-            var episode2 = new Episode(new EpisodeName("Test02"), new EpisodeTitle("Episode 2"), new PublicationDate(new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day - 1)));
+            var episode1 = new Episode(new EpisodeName("Test01"), new EpisodeTitle("Episode 1"), new PublicationDate(new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day - 10)),"");
+            var episode2 = new Episode(new EpisodeName("Test02"), new EpisodeTitle("Episode 2"), new PublicationDate(new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day - 1)),"");
 
             adminRepository.PublishEpisode(Enseignant1, episode1);
             adminRepository.PublishEpisode(Enseignant1, episode2);
@@ -91,7 +91,7 @@ namespace Podcast.Infrastructure.Tests
         [Test]
         public void NotRetrievePendingEpisode()
         {
-            var episode = new Episode(new EpisodeName("Test01"), new EpisodeTitle("Episode 1"), new PublicationDate(new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day + 10)));
+            var episode = new Episode(new EpisodeName("Test01"), new EpisodeTitle("Episode 1"), new PublicationDate(new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day + 10)), "");
 
             adminRepository.PublishEpisode(Enseignant1, episode);
 
@@ -112,8 +112,8 @@ namespace Podcast.Infrastructure.Tests
         public void OnlyRetrievePlaylistFromExpectedTeacher()
         {
 
-            var episode1 = new Episode(new EpisodeName("Test01"), new EpisodeTitle("Episode 1"), new PublicationDate(new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day - 10)));
-            var episode2 = new Episode(new EpisodeName("Test02"), new EpisodeTitle("Episode 2"), new PublicationDate(new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day - 1)));
+            var episode1 = new Episode(new EpisodeName("Test01"), new EpisodeTitle("Episode 1"), new PublicationDate(new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day - 10)), "");
+            var episode2 = new Episode(new EpisodeName("Test02"), new EpisodeTitle("Episode 2"), new PublicationDate(new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day - 1)), "");
 
             adminRepository.PublishEpisode(Enseignant2, episode1);
             adminRepository.PublishEpisode(Enseignant1, episode2);

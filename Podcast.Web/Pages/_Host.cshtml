@@ -1,16 +1,17 @@
 ﻿@page "/"
 @namespace Podcast.Web.Pages
+@using Podcast.Domain
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     Layout = null;
 }
-
+@inject IEcoleConfiguration ecoleConfiguration
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Blazzor</title>
+    <title>Podcast de l'école @ecoleConfiguration.GetEcole()</title>
     <base href="~/" />
     <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
     <link href="css/site.css" rel="stylesheet" />

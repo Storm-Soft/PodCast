@@ -7,22 +7,6 @@
         <p>Aucune playlist ou épisode à afficher pour le moment.</p>
     </div>
 }
-@*else
-{
-    @foreach (var episode in PlayList.Episodes)
-    {
-        <div class="episode">
-            <figure>
-                <figcaption>@($"{episode.DatePublication} - {episode.TitreEpisode}")</figcaption>
-                <a href="@($"{pathProvider.GetTeacherBrowsingFolder(Enseignant)}/{episode.NomEpisode}.mp3")" download>Télécharger</a><br />
-                <audio controls src="@($"{pathProvider.GetTeacherBrowsingFolder(Enseignant)}/{episode.NomEpisode}.mp3")" style="margin-top:3px;">
-                    Votre navigateur ne supporte pas l'élément
-                    <code>audio</code>.
-                </audio>
-            </figure>
-        </div>
-    }
-}*@
 else
 {
     <DataGrid Items="@PlayList.Episodes">
@@ -33,9 +17,9 @@ else
         </Columns>
         <RowTemplate>
             <td>@context.TitreEpisode</td>
-            <td>@($"{context.DatePublication:dd/mm/YYYY}")</td>
+            <td>@($"{context.DatePublication}")</td>
             <td>
-                <audio controls src="@($"{pathProvider.GetTeacherBrowsingFolder(Enseignant)}/{@context.NomEpisode}.mp3")" style="margin-top:3px;">
+                <audio controls src=@context.Chemin style="margin-top:3px;">
                     Votre navigateur ne supporte pas l'élément
                     <code>audio</code>.
                 </audio>
@@ -47,10 +31,6 @@ else
 
 @inject IPathProvider pathProvider
 @code{
-
-    [Parameter] public Enseignant Enseignant { get; set; }
-    [Parameter] public EventCallback<Enseignant> EnseignantChanged { get; set; }
-
     [Parameter] public PlayList PlayList { get; set; }
     [Parameter] public EventCallback<PlayList> PlayListChanged { get; set; }
 }

@@ -8,7 +8,7 @@ Ajouter un enseignant
         <ValidationSummary />
         <InputText id="teacher_lastname" placeholder="Nom" @bind-Value="Model.Nom" />
         <InputText id="teacher_firstname" placeholder="Prénom" @bind-Value="Model.Prenom" />
-        <InputText id="teacher_password" placeholder="Mot de passe" @bind-Value="Model.MotDePasse" />
+        <InputText id="teacher_password" type="password" placeholder="Mot de passe" @bind-Value="Model.MotDePasse" />
         <span>Admin<InputCheckbox id="teacher_admin" @bind-Value="Model.Admin"></InputCheckbox></span>
         <button type="submit">Ajouter</button>
     </EditForm>
