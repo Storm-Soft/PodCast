@@ -1,0 +1,13 @@
+﻿@page "/disconnect"
+@using Podcast.Domain
+@inject ILoginProvider loginProvider
+@inject NavigationManager navigationManager
+
+@code{
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        await loginProvider.DisconnectAsync();
+        navigationManager.NavigateTo("/");
+    }
+}

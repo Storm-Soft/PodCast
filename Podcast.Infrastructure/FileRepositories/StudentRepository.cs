@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Podcast.Domain;
+using Podcast.Domain.Equipe;
 using Podcast.Infrastructure.Dtos;
 using System;
 using System.IO;
@@ -10,25 +11,26 @@ namespace Podcast.Infrastructure.FileRepositories
 {
     public class StudentRepository : BaseRepository, IStudentRepository
     {
-        public StudentRepository(string connectionString) : base(connectionString)
+        public StudentRepository(IPathProvider connectionPathProvider)
+            : base(connectionPathProvider)
         {
         }
 
-        public Task<PlayList> LoadPlaylist()
+        private PlaylistDto LoadPlayListDto(string file)
         {
-            if (!File.Exists(SaveFileName)) return Task.FromResult(new PlayList(new Episode[0]));
+            if (!File.Exists(file))
+                return new PlaylistDto { Episodes = Array.Empty<EpisodeDto>() };
 
-            using (var fileStream = File.OpenText(SaveFileName))
-            {
-                JsonSerializer serializer = new JsonSerializer();
-                var playlist = (PlaylistDto)serializer.Deserialize(fileStream, typeof(PlaylistDto));
+            var playListContent = File.ReadAllText(file);
+            var playListDto =  JsonConvert.DeserializeObject<PlaylistDto>(playListContent) ?? new PlaylistDto { Episodes = Array.Empty<EpisodeDto>() };
+            return new PlaylistDto { Episodes = playListDto.Episodes.Where(e => e.DatePublication <= DateTime.Today.AddDays(1).AddMinutes(-1)).ToArray() };
+        }
 
-                if (playlist == null)
-                    return Task.FromResult(new PlayList(new Episode[0]));
-
-                var filterPlayList = new PlaylistDto { Episodes = playlist.Episodes.Where(e => e.DatePublication <= DateTime.Today.AddDays(1).AddMinutes(-1)).ToArray() };
-                return Task.FromResult(filterPlayList.ToPlayList());
-            }
+        public Task<PlayList> LoadPlaylist(Enseignant enseignant)
+        {
+            var basePath = ConnectionPathProvider.GetSaveFileName(enseignant);
+            var playlistDto = LoadPlayListDto(basePath);
+            return Task.FromResult(playlistDto.ToPlayList());
         }
     }
 }

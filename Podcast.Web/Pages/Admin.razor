@@ -1,0 +1,60 @@
+﻿@page "/admin"
+@using Podcast.Web.Components
+@using Podcast.Domain
+@using Podcast.Domain.Equipe
+<h1>Admin</h1>
+@if (loginProvider.IsAdmin())
+{
+    <AddTeacher OnTeacherCreated="OnTeacherCreated" />
+}
+<div style="top:25px" />
+<TeacherBrowser OnEnseignantChanged="SelectedEnseignantChanged" />
+
+@if (Enseignant != null)
+{
+    <PodcastBrowser @bind-PlayList="PlayList" @bind-Enseignant="Enseignant" />
+
+    <div style="top:25px" />
+
+    if (loginProvider.GetLogedUser() == Enseignant.Nom || loginProvider.IsAdmin())
+    {
+        <AddPodcast OnPodcastAdded="OnPodcastAdded" @bind-Enseignant="Enseignant" />
+    }
+}
+
+@inject IAdminRepository adminRepository
+@inject IPathProvider pathProvider
+@inject ILoginProvider loginProvider
+@inject NavigationManager navigationManager
+
+@code{
+    public EquipeEnseignante EquipeEnseignante { get; set; }
+
+    public Enseignant Enseignant { get; set; }
+    public PlayList PlayList { get; set; }
+
+
+    protected async override Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        if (!loginProvider.IsLoged())
+            navigationManager.NavigateTo("login/admin");
+    }
+
+    protected async Task SelectedEnseignantChanged(Enseignant enseignant)
+    {
+        Enseignant = enseignant;
+        await LoadPlayListAsync(enseignant);
+    }
+
+    protected async Task OnTeacherCreated(EquipeEnseignante equipeEnseignante)
+    {
+        EquipeEnseignante = equipeEnseignante;
+    }
+
+    protected Task OnPodcastAdded(Enseignant enseignant)
+        => LoadPlayListAsync(enseignant);
+
+    private async Task LoadPlayListAsync(Enseignant enseignant)
+        => PlayList = await adminRepository.LoadAllEpisodes(enseignant);
+}

@@ -1,0 +1,55 @@
+﻿@namespace Podcast.Web.Components
+@using System.IO
+@using System.Text
+@using Podcast.Domain
+@using Podcast.Domain.Equipe
+
+@if ((Equipe?.Enseignants?.Count ?? 0) == 0)
+{
+    <div>
+        <p>Aucun enseignant enregistré pour le moment.</p>
+    </div>
+}
+else
+{
+    <div>Sélectionner l'enseignant </div>
+    <select @onchange=SelectionChanged>
+        <option value=@Enseignant.None.Nom>-</option>
+        @foreach (var enseignant in Equipe.Enseignants)
+        {
+            <option value=@enseignant.Nom>@($"{enseignant}")</option>
+        }
+    </select>
+}
+
+@inject ITeamRepository teamRepository
+@code  {
+
+    public EquipeEnseignante Equipe { get; set; }
+
+    //private string selectedEnseignant = string.Empty;
+    //public string SelectedEnseignant
+    //{
+    //    get => selectedEnseignant;
+    //    set
+    //    {
+    //        selectedEnseignant = value;
+    //        Task.Run(async () =>
+    //        await OnTeacherSelected.InvokeAsync(Equipe.Enseignants.FirstOrDefault(x => x.Nom == value)));
+    //    }
+    //}
+    private string selectedEnseignant = string.Empty;
+    [Parameter] public EventCallback<Enseignant> OnEnseignantChanged { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        Equipe = await teamRepository.LoadEnseignants();
+    }
+
+    private async Task SelectionChanged(ChangeEventArgs e)
+    {
+        var enseignant = Equipe.Enseignants.FirstOrDefault(x => x.Nom == ((string)e.Value));
+        await OnEnseignantChanged.InvokeAsync(enseignant);
+    }
+}

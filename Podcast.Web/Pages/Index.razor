@@ -1,0 +1,35 @@
+﻿@page "/"
+@using Podcast.Domain
+@using Podcast.Domain.Equipe
+@using Podcast.Web.Components
+
+<div class="text-center">
+    <h1 class="display-4">Podcast </h1>
+   
+    <TeacherBrowser OnEnseignantChanged="SelectedEnseignantChanged" />
+
+    @if (Enseignant != null)
+    {
+        <PodcastBrowser @bind-PlayList="PlayList" @bind-Enseignant="Enseignant"/>
+    }
+</div>
+
+
+@inject IStudentRepository studentRepository
+
+@code{
+    public Enseignant Enseignant { get; set; }
+    public PlayList PlayList { get; set; }
+
+    protected async Task SelectedEnseignantChanged(Enseignant enseignant)
+    {
+        Enseignant = enseignant;
+        await LoadPlayListAsync(enseignant);
+    }
+
+    protected Task OnPodcastAdded(Enseignant enseignant)
+        => LoadPlayListAsync(enseignant);
+
+    private async Task LoadPlayListAsync(Enseignant enseignant)
+        => PlayList = await studentRepository.LoadPlaylist(enseignant);
+}

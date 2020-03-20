@@ -9,14 +9,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Podcast.Domain;
+using Podcast.Infrastructure;
 using Podcast.Infrastructure.FileRepositories;
+using Podcast.Infrastructure.Security;
 
 namespace Podcast.Web
 {
     public class Startup
     {
-        private const string _saveFileName = "playlist.save";
-
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -28,9 +28,16 @@ namespace Podcast.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRazorPages();
-
-            services.AddTransient<IAdminRepository>(_ => new AdminRepository(_saveFileName));
-            services.AddTransient<IStudentRepository>(_ => new StudentRepository(_saveFileName));
+            services.AddServerSideBlazor();
+            services.AddTransient<IDefaultAccount, DefaultAccount>()
+                    .AddTransient<IEncryptionProvider, EncryptionProvider>()
+                    .AddTransient<IPathProvider, PathProvider>()
+                    .AddTransient<IAccountManagementRepository, AccountManagementRepository>()
+                    .AddTransient<ITeamRepository, TeamRepository>()
+                    .AddTransient<IAdminRepository, AdminRepository>()
+                    .AddTransient<IStudentRepository, StudentRepository>()
+                    .AddScoped<ILoginProvider, LoginProvider>()
+                    .AddSingleton<IEcoleConfiguration,EcoleConfiguration>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -56,7 +63,8 @@ namespace Podcast.Web
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapRazorPages();
+                endpoints.MapBlazorHub();
+                endpoints.MapFallbackToPage("/_Host");
             });
         }
     }

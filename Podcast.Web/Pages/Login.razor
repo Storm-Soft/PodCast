@@ -1,0 +1,48 @@
+﻿@page "/login/{ReturnUrl}"
+@using Podcast.Domain
+@using Podcast.Web.Models
+<h1>Login</h1>
+
+<EditForm Model="Model" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <InputText id="name" placeholder="Utilisateur" @bind-Value="Model.Nom" />
+    <InputText id="password" type="password" placeholder="Mot de passe" @bind-Value="Model.MotDePasse" />
+    <label>@ErrorMessage</label>
+    <button type="submit">Submit</button>
+</EditForm>
+
+@inject ILoginProvider loginProvider
+@inject NavigationManager navigationManager
+
+@code{
+    
+    public LoginModel Model { get; set; } = new LoginModel();
+    public string ErrorMessage { get; set; }
+
+    [Parameter] public string ReturnUrl { get; set; }
+
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await base.OnParametersSetAsync();
+        if (string.IsNullOrEmpty(ReturnUrl))
+            ReturnUrl = "/";
+
+        if (loginProvider.IsLoged())
+            navigationManager.NavigateTo(ReturnUrl);
+    }
+
+
+    protected async Task HandleValidSubmit()
+    {
+        var isLoged = await loginProvider.Login(Model.Nom, Model.MotDePasse);
+        if (isLoged)
+        {
+            navigationManager.NavigateTo(ReturnUrl);
+            return;
+        }
+
+        ErrorMessage = "Impossible de se connecter";
+    }
+}

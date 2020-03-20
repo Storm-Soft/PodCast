@@ -1,63 +1,51 @@
 ﻿using Newtonsoft.Json;
 using Podcast.Domain;
+using Podcast.Domain.Equipe;
 using Podcast.Infrastructure.Dtos;
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Podcast.Infrastructure.FileRepositories
 {
+
     public class AdminRepository : BaseRepository, IAdminRepository
-    {
-        public AdminRepository(string connectionString) : base(connectionString)
+    {       
+
+        public AdminRepository(IPathProvider connectionPathProvider) 
+            : base(connectionPathProvider)
         {
         }
-
-        public Task<PlayList> LoadAllEpisodes()
+        
+        public Task PublishEpisode(Enseignant enseignant, Episode episode)
         {
-            if (!File.Exists(SaveFileName)) return Task.FromResult(new PlayList(new Episode[0]));
-
-            using (var fileStream = File.OpenText(SaveFileName))
-            {
-                JsonSerializer serializer = new JsonSerializer();
-                PlaylistDto playlist = (PlaylistDto)serializer.Deserialize(fileStream, typeof(PlaylistDto));
-
-                if (playlist == null)
-                    return Task.FromResult(new PlayList(new Episode[0]));
-
-                return Task.FromResult(playlist.ToPlayList());
-            }
-        }
-
-        public Task PublishEpisode(Episode episode)
-        {
-            PlaylistDto majedPlaylist = null;
-            var serializer = new JsonSerializer();
+            var basePath = ConnectionPathProvider.GetSaveFileName(enseignant);
             var dtoToSave = EpisodeDto.CreateFromEpisode(episode);
-            if (new FileInfo(SaveFileName).Exists)
-            {
-                using (var fileStream = File.OpenText(SaveFileName))
-                {
-                    var playlist = (PlaylistDto)serializer.Deserialize(fileStream, typeof(PlaylistDto)) ?? new PlaylistDto();
-
-                    var existingEpisodes = playlist.Episodes ?? new EpisodeDto[0];
-                    var concatenedEpisodes = existingEpisodes.Concat(new[] { dtoToSave }).ToArray();
-                    majedPlaylist = new PlaylistDto { Episodes = concatenedEpisodes };
-                }
-
-                File.Delete(SaveFileName);
-            }
-            else
-            {
-                majedPlaylist = new PlaylistDto { Episodes = new[] { dtoToSave } };
-            }
-
-            using (var fileStream = File.CreateText(SaveFileName))
-            {
-                serializer.Serialize(fileStream, majedPlaylist);
-            }
-
+            var playlistDto = LoadPlayListDto(basePath);
+            playlistDto.Episodes = playlistDto.Episodes.Concat(new[] { dtoToSave }).ToArray();
+            File.WriteAllText(basePath, JsonConvert.SerializeObject(playlistDto)); //ecrasera le fichier si il existe
             return Task.CompletedTask;
+        }
+
+        private PlaylistDto LoadPlayListDto(string file)
+        {
+            if (!File.Exists(file))
+                return new PlaylistDto { Episodes = Array.Empty<EpisodeDto>() };
+
+            var playListContent = File.ReadAllText(file);
+            return JsonConvert.DeserializeObject<PlaylistDto>(playListContent) ?? new PlaylistDto { Episodes = Array.Empty<EpisodeDto>() };
+        }
+
+        public Task<PlayList> LoadAllEpisodes(Enseignant enseignant)
+        {
+            if (enseignant == Enseignant.None)
+                return Task.FromResult(new PlayList(Array.Empty<Episode>()));
+
+            var basePath = ConnectionPathProvider.GetSaveFileName(enseignant);
+            var playlistDto = LoadPlayListDto(basePath);
+            return Task.FromResult(playlistDto.ToPlayList());
         }
     }
 }

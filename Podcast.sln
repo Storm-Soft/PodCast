@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29911.84
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Podcast.Web", "Podcast.Web\Podcast.Web.csproj", "{57900257-3846-4E59-9C4E-C4809D27E0D2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Podcast.Web", "Podcast.Web\Podcast.Web.csproj", "{57900257-3846-4E59-9C4E-C4809D27E0D2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Podcast.Infrastructure", "Podcast.Infrastructure\Podcast.Infrastructure.csproj", "{73039F0B-7B64-4A1F-9296-F8F46BB0A348}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Podcast.Infrastructure", "Podcast.Infrastructure\Podcast.Infrastructure.csproj", "{73039F0B-7B64-4A1F-9296-F8F46BB0A348}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Podcast.Domain", "Podcast.Domain\Podcast.Domain.csproj", "{727AD000-2EF8-47E3-9493-01BA946A470A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Podcast.Domain", "Podcast.Domain\Podcast.Domain.csproj", "{727AD000-2EF8-47E3-9493-01BA946A470A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Podcast.Infrastructure.Tests", "Podcast.Infrastructure.Tests\Podcast.Infrastructure.Tests.csproj", "{19960C50-87B2-4C79-9380-DEB6C72967BC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Podcast.Infrastructure.Tests", "Podcast.Infrastructure.Tests\Podcast.Infrastructure.Tests.csproj", "{19960C50-87B2-4C79-9380-DEB6C72967BC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

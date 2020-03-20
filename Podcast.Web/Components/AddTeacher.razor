@@ -1,0 +1,35 @@
+﻿@namespace Podcast.Web.Components
+@using Podcast.Domain.Equipe
+@using Podcast.Domain.Comptes
+
+Ajouter un enseignant
+    <EditForm Model="Model" OnValidSubmit="HandleCreateTeacher">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <InputText id="teacher_lastname" placeholder="Nom" @bind-Value="Model.Nom" />
+        <InputText id="teacher_firstname" placeholder="Prénom" @bind-Value="Model.Prenom" />
+        <InputText id="teacher_password" placeholder="Mot de passe" @bind-Value="Model.MotDePasse" />
+        <span>Admin<InputCheckbox id="teacher_admin" @bind-Value="Model.Admin"></InputCheckbox></span>
+        <button type="submit">Ajouter</button>
+    </EditForm>
+
+@inject Podcast.Domain.ITeamRepository teamRepository
+@inject Podcast.Domain.IAccountManagementRepository accountManagementRepository
+
+@code{
+    [Parameter] public EventCallback<EquipeEnseignante> OnTeacherCreated { get; set; }
+
+    Podcast.Web.Models.AddTeacherModel Model { get; set; } = new Models.AddTeacherModel();
+
+    private async Task HandleCreateTeacher()
+    {
+        var equipe = await teamRepository.LoadEnseignants();
+        await teamRepository.AddOrUpdateEnseignant(equipe, new Enseignant(Model.Nom, Model.Prenom));
+        equipe = await teamRepository.LoadEnseignants();
+
+        var accounts = await accountManagementRepository.LoadAccounts();
+        await accountManagementRepository.CreateOrUpdateLogin(accounts, new Compte(Model.Nom, Model.MotDePasse, Model.Admin));
+
+        await OnTeacherCreated.InvokeAsync(equipe);
+    }
+}

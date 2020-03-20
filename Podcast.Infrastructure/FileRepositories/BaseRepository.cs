@@ -1,14 +1,15 @@
 ﻿using System;
+using Podcast.Domain;
 
 namespace Podcast.Infrastructure.FileRepositories
 {
     public abstract class BaseRepository
     {
-        protected string SaveFileName;
+        protected IPathProvider ConnectionPathProvider;
 
-        protected BaseRepository(string saveFileName)
+        protected BaseRepository(IPathProvider connectionPathProvider)
         {
-            SaveFileName = saveFileName ?? throw new ArgumentNullException(nameof(saveFileName));
+            ConnectionPathProvider = connectionPathProvider ?? throw new ArgumentNullException(nameof(connectionPathProvider));
         }
 
     }

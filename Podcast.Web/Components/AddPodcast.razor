@@ -1,0 +1,52 @@
+﻿@namespace Podcast.Web.Components
+@using System.IO
+@using System.Text
+@using Podcast.Domain
+@using Podcast.Domain.Equipe
+
+Ajouter un podcast pour @Enseignant
+<EditForm Model="Model" OnValidSubmit="HandleUploadPodcast">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <InputText id="title" placeholder="Titre Episode" @bind-Value="Model.TitreEpisode" />
+    <InputDate id="date" type="date" placeholder="Publier à cette date" @bind-Value="Model.DatePublication" />
+    <InputFile OnChange="Model.HandleFileSelected" />
+    <button type="submit">Submit</button>
+    <label style="color:green">@Result</label>
+</EditForm>
+
+@inject IAdminRepository adminRepository
+@inject IPathProvider pathProvider
+
+@code{
+    public string Result { get; set; }
+    [Parameter] public Enseignant Enseignant { get; set; }
+    [Parameter] public EventCallback<Enseignant> EnseignantChanged { get; set; }
+    [Parameter] public EventCallback<Enseignant> OnPodcastAdded { get; set; }
+
+    Podcast.Web.Models.AddPodcastModel Model { get; set; } = new Models.AddPodcastModel();
+
+    protected async Task HandleUploadPodcast()
+    {
+        var audioDir = pathProvider.GetTeacherSaveFolder(Enseignant);
+
+        foreach (var file in Model.Files)
+        {
+            var path = Path.Combine(audioDir, file.Name);
+
+            //using var streamReader = new StreamReader(file.Data);
+            //var fileContent = await streamReader.ReadToEndAsync();
+            //var fileBytes = Encoding.UTF8.GetBytes(fileContent);
+            using var fileStream = new FileStream(path, FileMode.Create);
+            //await fileStream.WriteAsync(fileBytes);
+            await file.Data.CopyToAsync(fileStream);
+            await adminRepository.PublishEpisode(Enseignant, new Episode(nomEpisode: new EpisodeName(Path.GetFileNameWithoutExtension(file.Name)),
+                                                                                titreEpisode: new EpisodeTitle(Model.TitreEpisode),
+                                                                                datePublication: new PublicationDate(Model.DatePublication)));
+        }
+        await OnPodcastAdded.InvokeAsync(Enseignant);
+        Result = "Podcast Ajouté";
+        await Task.Delay(2000);
+        Result = string.Empty;
+    }
+}
