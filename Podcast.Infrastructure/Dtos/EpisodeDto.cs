@@ -1,4 +1,4 @@
-﻿using Podcast.Domain;
+﻿using Podcast.Domain.Episodes;
 using System;
 using System.Collections.Generic;
 using System.Text;

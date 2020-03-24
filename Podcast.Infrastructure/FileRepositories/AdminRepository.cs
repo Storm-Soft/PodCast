@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Podcast.Domain;
+using Podcast.Domain.Episodes;
 using Podcast.Domain.Equipe;
 using Podcast.Infrastructure.Dtos;
 using System;

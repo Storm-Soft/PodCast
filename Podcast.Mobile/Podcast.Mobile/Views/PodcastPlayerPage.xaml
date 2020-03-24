@@ -1,0 +1,406 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:pancake="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
+             xmlns:models="clr-namespace:Podcast.Mobile.Models"
+             xmlns:helpers="clr-namespace:Podcast.Mobile.Helpers"
+             xmlns:viewmodel="clr-namespace:Podcast.Mobile.ViewModels"
+             xmlns:controls="clr-namespace:Podcast.Mobile.Controls"
+             mc:Ignorable="d"
+             x:Class="Podcast.Mobile.Views.PodcastPlayerPage"
+             BackgroundColor="{DynamicResource WindowBackgroundColor}"
+             Title="New Item">
+    <ContentPage.Resources>
+        <helpers:TimeSpanConverter x:Key="timespanConverter"/>
+    </ContentPage.Resources>
+    <d:ContentPage.BindingContext>
+        <viewmodel:PodcastPlayerViewModel>
+            <x:Arguments>
+                <models:Episode
+                    Titre="Episode test"
+                    Nom= "Nom test"
+                    DatePublication="Today" />
+            </x:Arguments>
+        </viewmodel:PodcastPlayerViewModel>
+    </d:ContentPage.BindingContext>
+    <ContentPage.Content>
+        <!--<Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.25*" />
+                <ColumnDefinition Width="0.25*" />
+                <ColumnDefinition Width="0.25*" />
+                <ColumnDefinition Width="0.25*" />
+            </Grid.ColumnDefinitions>
+            <MediaElement x:Name="MediaElementAudio"
+                      Grid.Row="0"
+                      Grid.ColumnSpan="4"
+                      AutoPlay="False"
+                      Source="{Binding Episode.Url}" />
+            <Grid Grid.Row="1"
+              Grid.ColumnSpan="4"
+              BindingContext="{x:Reference MediaElementAudio}">
+                <Label x:Name="positionLabel"
+                   Margin="10,0"
+                   Text="00:00:00"
+                   VerticalOptions="Center" />
+                <Button Grid.Column="1"
+                    Text="&#x25B6;&#xFE0F; Play"
+                    HorizontalOptions="Start"
+                    Clicked="OnPlayPauseButtonClicked">
+                    <Button.Triggers>
+                        <DataTrigger TargetType="Button"
+                                 Binding="{Binding CurrentState}"
+                                 Value="{x:Static MediaElementState.Playing}">
+                            <Setter Property="Text" Value="&#x23F8; Pause" />
+                        </DataTrigger>
+                        <DataTrigger TargetType="Button"
+                                 Binding="{Binding CurrentState}"
+                                 Value="{x:Static MediaElementState.Buffering}">
+                            <Setter Property="IsEnabled" Value="False" />
+                        </DataTrigger>
+                    </Button.Triggers>
+                </Button>
+                <Button Grid.Column="2"
+                    Text="&#x23F9; Stop"
+                    HorizontalOptions="Start"
+                    Clicked="OnStopButtonClicked">
+                    <Button.Triggers>
+                        <DataTrigger TargetType="Button"
+                                 Binding="{Binding CurrentState}"
+                                 Value="{x:Static MediaElementState.Stopped}">
+                            <Setter Property="IsEnabled" Value="False" />
+                        </DataTrigger>
+                    </Button.Triggers>
+                </Button>
+                <Label Grid.Column="3"
+                   Margin="10,0"
+                   Text="{Binding Source={x:Reference positionSlider}, Path=TimeToEnd, StringFormat='{0:hh\\:mm\\:ss}'}"
+                   VerticalOptions="Center" />
+            </Grid>
+            <controls:PositionSlider x:Name="positionSlider"
+                                 Grid.Row="2"
+                                 Grid.ColumnSpan="4"
+                                 Margin="20,0,10,20"
+                                 BindingContext="{x:Reference MediaElementAudio}"
+                                 Duration="{Binding Duration}"
+                                 ValueChanged="OnPositionSliderValueChanged">
+                <controls:PositionSlider.Triggers>
+                    <DataTrigger TargetType="controls:PositionSlider"
+                             Binding="{Binding CurrentState}"
+                             Value="{x:Static MediaElementState.Buffering}">
+                        <Setter Property="IsEnabled" Value="False" />
+                    </DataTrigger>
+                </controls:PositionSlider.Triggers>
+            </controls:PositionSlider>
+        </Grid>-->
+        <Grid RowSpacing="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="1" />
+            </Grid.RowDefinitions>
+             <ScrollView>
+               <Grid RowSpacing="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <pancake:PancakeView
+                        Padding="{OnPlatform iOS='0,40,0,33',
+                                             Default='0,0,0,33'}"
+                        BackgroundGradientEndColor="{DynamicResource WindowBackgroundColor}"
+                        BackgroundGradientStartColor="{DynamicResource PrimaryColor}">
+                        <StackLayout
+                            Padding="16"
+                            HorizontalOptions="FillAndExpand"
+                            VerticalOptions="Start">
+                            <Button
+                                x:Name="ButtonClose"
+                                Clicked="ButtonClose_Clicked"
+                                HorizontalOptions="End"
+                                Style="{DynamicResource CloseButtonStyle}"
+                                Text="Close" />
+                            <Frame
+                                Grid.RowSpan="3"
+                                Padding="0"
+                                CornerRadius="10"
+                                HorizontalOptions="Center"
+                                Style="{DynamicResource FrameStyle}"
+                                VerticalOptions="Center">
+                                <Image
+                                    Aspect="AspectFill"
+                                    AutomationProperties.IsInAccessibleTree="True"
+                                    AutomationProperties.Name="Podcast Artwork"
+                                    HeightRequest="125"
+                                    Source="{Binding Episode.ArtworkUrl}"
+                                    WidthRequest="125" />
+                            </Frame>
+                            <Label
+                                d:Text="Titre de l'épisode"
+                                FontAttributes="Bold"
+                                HorizontalTextAlignment="Center"
+                                Style="{DynamicResource LargeLabelStyle}"
+                                Text="{Binding Episode.Title}"
+                                TextColor="White" />
+                            <Label
+                                d:Text="Nom enseignant"
+                                AutomationProperties.HelpText="Name of the podcast"
+                                HorizontalTextAlignment="Center"
+                                Style="{DynamicResource MediumLabelStyle}"
+                                Text="{Binding Title}" />
+                        </StackLayout>
+                    </pancake:PancakeView>
+
+
+                    <Grid
+                        Grid.Row="1"
+                        Padding="10,5"
+                        ColumnSpacing="0"
+                        RowSpacing="5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="24*" />
+                            <ColumnDefinition Width="24*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="24*" />
+                            <ColumnDefinition Width="24*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                              <!--Buttons-->  
+                            <RowDefinition Height="Auto" />
+                              <!--Button Labels-->  
+                            <RowDefinition Height="Auto" />
+                              <!--Line-->  
+                            <RowDefinition Height="Auto" />
+                              <!--Release Date/TimeLeft-->  
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <ImageButton
+                            Grid.Column="1"
+                            d:BackgroundColor=""
+                            BackgroundColor="Transparent"
+                            HeightRequest="24"
+                            WidthRequest="24"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center"
+                            Clicked="RewindButton_Click"
+                            Aspect="AspectFit">
+                            <ImageButton.Source>
+                                <FontImageSource
+                                    FontFamily="{DynamicResource MaterialFontFamily}"
+                                    Glyph="{StaticResource IconRewind}"
+                                    Color="{StaticResource PrimaryColor}" />
+                            </ImageButton.Source>
+                        </ImageButton>                      
+                        <ImageButton
+                            x:Name="PlayPauseButton"
+                            Grid.Column="2"
+                            Margin="20,-33,20,0"
+                            Padding="8"
+                            BackgroundColor="{DynamicResource WindowBackgroundColor}"
+                            Command="{Binding PlayResumeCommand}"
+                            CornerRadius="33"
+                            HeightRequest="66"
+                            HorizontalOptions="Center"
+                            Source="{StaticResource PlayIcon}"
+                            Visual="Material"
+                            WidthRequest="66"
+                            VerticalOptions="Center"
+                            Aspect="AspectFit">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup Name="PlaybackStates">
+                                    <VisualState Name="paused">
+                                        <VisualState.Setters>
+                                            <Setter Property="Source" Value="{StaticResource PlayIcon}" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState Name="playing">
+                                        <VisualState.Setters>
+                                            <Setter Property="Source" Value="{StaticResource PauseIcon}" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                        </ImageButton>
+                        <ImageButton
+                            Grid.Column="3"
+                            d:BackgroundColor=""
+                            BackgroundColor="Transparent"
+                            HeightRequest="24"
+                            WidthRequest="24"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center"
+                            Clicked="ForwardButton_Clicked"
+                            Aspect="AspectFit">
+                            <ImageButton.Source>
+                                <FontImageSource
+                                    FontFamily="{DynamicResource MaterialFontFamily}"
+                                    Glyph="{StaticResource IconForward}"
+                                    Color="{StaticResource PrimaryColor}" />
+                            </ImageButton.Source>
+                        </ImageButton>
+                        <ImageButton
+                            Grid.Row="3"
+                            Grid.Column="0"
+                            d:BackgroundColor=""
+                            BackgroundColor="Transparent"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center"
+                            Aspect="AspectFit"
+                            HeightRequest="24"
+                            WidthRequest="24">
+                            <ImageButton.Source>
+                                <FontImageSource
+                                    FontFamily="{DynamicResource MaterialFontFamily}"
+                                    Glyph="{StaticResource IconDownload}"
+                                    Color="{StaticResource PrimaryColor}" />
+                            </ImageButton.Source>
+                        </ImageButton>
+
+                        <Label
+                            Grid.Row="4"
+                            Grid.Column="0"
+                            Margin="0,-5,0,0"
+                            HorizontalOptions="Center"
+                            HorizontalTextAlignment="Center"
+                            Style="{DynamicResource MicroLabelStyle}"
+                            Text="Download" />
+
+                        <ImageButton
+                            Grid.Row="3"
+                            Grid.Column="1"
+                            d:BackgroundColor=""
+                            BackgroundColor="Transparent"
+                            HeightRequest="24"
+                            WidthRequest="24"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center"
+                            Aspect="AspectFit">
+                            <ImageButton.Source>
+                                <FontImageSource
+                                    FontFamily="{DynamicResource MaterialFontFamily}"
+                                    Glyph="{StaticResource IconUpNext}"
+                                    Color="{StaticResource PrimaryColor}" />
+                            </ImageButton.Source>
+                        </ImageButton>
+
+                        <Label
+                            Grid.Row="4"
+                            Grid.Column="1"
+                            Margin="0,-5,0,0"
+                            HorizontalOptions="Center"
+                            HorizontalTextAlignment="Center"
+                            Style="{DynamicResource MicroLabelStyle}"
+                            Text="Up Next" />
+
+                        <ImageButton
+                            Grid.Row="3"
+                            Grid.Column="3"
+                            d:BackgroundColor=""
+                            BackgroundColor="Transparent"
+                            HeightRequest="24"
+                            WidthRequest="24"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center"
+                            Aspect="AspectFit">
+                            <ImageButton.Source>
+                                <FontImageSource
+                                    FontFamily="{DynamicResource MaterialFontFamily}"
+                                    Glyph="{StaticResource IconMarkPlayed}"
+                                    Color="{StaticResource PrimaryColor}" />
+                            </ImageButton.Source>
+                        </ImageButton>                      
+
+                        <Label
+                            Grid.Row="4"
+                            Grid.Column="3"
+                            Margin="0,-5,0,0"
+                            HorizontalOptions="Center"
+                            HorizontalTextAlignment="Center"
+                            Style="{DynamicResource MicroLabelStyle}"
+                            Text="Mark Played" />
+
+                        <ImageButton
+                            Grid.Row="3"
+                            Grid.Column="4"
+                            d:BackgroundColor=""
+                            BackgroundColor="Transparent"
+                            HeightRequest="24"
+                            WidthRequest="24"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center"
+                            Aspect="AspectFit">
+                            <ImageButton.Source>
+                                <FontImageSource
+                                    FontFamily="{DynamicResource MaterialFontFamily}"
+                                    Glyph="{StaticResource IconArchived}"
+                                    Color="{StaticResource PrimaryColor}" />
+                            </ImageButton.Source>
+                        </ImageButton>
+                        <Label
+                            Grid.Row="4"
+                            Grid.Column="4"
+                            Margin="0,-5,0,0"
+                            HorizontalOptions="Center"
+                            HorizontalTextAlignment="Center"
+                            Style="{DynamicResource MicroLabelStyle}"
+                            Text="Archive" />
+                        <StackLayout Orientation="Horizontal" Grid.Row="2" Margin="-10,10" Grid.ColumnSpan="5" BindingContext="{x:Reference MediaElementAudio}">
+                            <Label  x:Name="LabelTimeSpent"  HorizontalOptions="Start" Style="{DynamicResource SmallLabelStyle}" 
+                                    Text="{Binding Position, Converter={StaticResource timespanConverter}}" />
+                            <!--<Grid  HorizontalOptions="FillAndExpand" Margin="10,-10">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>-->
+                            <ProgressBar HeightRequest="5" HorizontalOptions="FillAndExpand" Visual="Material"  x:Name="ProgressBarProgress" Margin="10,-10"/>
+                                <!--<controls:PositionSlider Position="{Binding Position, Mode=TwoWay}" Duration="{Binding Duration, Mode=OneWay}" Margin="-10,10"/>
+                            </Grid>-->
+                            <Label  x:Name="LabelTimeRemaining"  HorizontalOptions="End" Style="{DynamicResource SmallLabelStyle}" 
+                                    Text="{Binding Duration, Converter={StaticResource timespanConverter}}" />
+                        </StackLayout>         
+                      
+                        <Label
+                            Grid.Row="5"
+                            Grid.ColumnSpan="2"
+                            Style="{DynamicResource SmallLabelStyle}"
+                            Text="{Binding Episode.Date}" />
+
+                       
+
+                        <Label
+                            Grid.Row="6"
+                            Grid.ColumnSpan="5"
+                            Margin="0,5,0,0"
+                            Style="{DynamicResource MediumLabelStyle}"
+                            Text="{Binding Episode.Description}" />
+                    </Grid>
+                    <ActivityIndicator
+                        Grid.Row="1"
+                        d:IsRunning="True"
+                        d:IsVisible="False"
+                        HorizontalOptions="CenterAndExpand"                        
+                        IsRunning="{Binding IsBusy}"
+                        IsVisible="{Binding IsBusy}"
+                        VerticalOptions="CenterAndExpand"
+                        Visual="Material"
+                        Color="{StaticResource AccentColor}" />
+                </Grid>
+            </ScrollView>   
+                <!--<MediaElement
+                x:Name="MediaElementAudio"
+                Grid.Row="1"
+                AutoPlay="False" 
+                HorizontalOptions="FillAndExpand"
+                IsVisible="True"
+                Source="{Binding Episode.Url}" ShowsPlaybackControls="False" BackgroundColor="{DynamicResource WindowBackgroundColor}"/>-->
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

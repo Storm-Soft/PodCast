@@ -6,6 +6,7 @@ using System.Linq;
 using System.IO;
 using Podcast.Infrastructure.Security;
 using Podcast.Domain.Equipe;
+using Podcast.Domain.Episodes;
 
 namespace Podcast.Infrastructure.Tests
 {

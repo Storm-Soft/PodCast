@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Podcast.Domain;
+using Podcast.Domain.Episodes;
 using Podcast.Domain.Equipe;
 using Podcast.Web.Models;
 

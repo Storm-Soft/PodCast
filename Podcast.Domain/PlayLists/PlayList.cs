@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Podcast.Domain.Episodes;
+using System;
 using System.Collections.Generic;
 
 namespace Podcast.Domain

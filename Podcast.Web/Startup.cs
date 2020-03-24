@@ -28,6 +28,7 @@ namespace Podcast.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRazorPages();
+            services.AddControllers();
             services.AddServerSideBlazor();
             services.AddTransient<IDefaultAccount, DefaultAccount>()
                     .AddTransient<IEncryptionProvider, EncryptionProvider>()
@@ -63,6 +64,7 @@ namespace Podcast.Web
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllers();
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
             });

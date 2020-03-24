@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="Podcast.Mobile.Views.EnseignantPlaylistPage"
+             Title="{Binding Title}">
+
+    <!--<StackLayout Spacing="20" Padding="15">
+        <Label Text="Text:" FontSize="Medium" />
+        <Label Text="{Binding Item.Text}" d:Text="Item name" FontSize="Small"/>
+        <Label Text="Description:" FontSize="Medium" />
+        <Label Text="{Binding Item.Description}" d:Text="Item description" FontSize="Small"/>
+    </StackLayout>-->
+    <CollectionView x:Name="ItemsCollectionView" ItemsSource="{Binding Episodes}">
+        <CollectionView.ItemTemplate>
+            <DataTemplate>
+                <StackLayout Padding="10">
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="Titre : " FontSize="Medium" />
+                        <Label Text="{Binding Titre}"  FontSize="Medium"/>
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="Nom : " FontSize="Medium" />
+                        <Label Text="{Binding Nom}"  FontSize="Medium"/>
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="Date de publication : " FontSize="Medium" />
+                        <Label Text="{Binding DatePublication}"  FontSize="Medium"/>
+                    </StackLayout>                
+                    <StackLayout.GestureRecognizers>
+                        <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="OnItemSelected"></TapGestureRecognizer>
+                    </StackLayout.GestureRecognizers>
+                </StackLayout>
+            </DataTemplate>
+        </CollectionView.ItemTemplate>
+    </CollectionView>
+
+</ContentPage>

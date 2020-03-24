@@ -7,6 +7,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Podcast.Domain\Podcast.Domain.csproj" />
     <ProjectReference Include="..\Podcast.Infrastructure\Podcast.Infrastructure.csproj" />
+    <ProjectReference Include="..\Podcast.Web.Entites\Podcast.Web.Entites.csproj" />
   </ItemGroup>
 
   <ItemGroup>

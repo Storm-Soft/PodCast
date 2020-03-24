@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Value;
 
-namespace Podcast.Domain
+namespace Podcast.Domain.Episodes
 {
     public class PublicationDate : ValueType<PublicationDate>
     {

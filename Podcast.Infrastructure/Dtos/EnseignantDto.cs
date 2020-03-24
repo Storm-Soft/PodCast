@@ -7,9 +7,9 @@ namespace Podcast.Infrastructure.Dtos
         public string Nom { get; set; }
         public string Prenom { get; set; }
 
-        public Enseignant ToEnseignant() => new Enseignant(nom: Nom, prenom: Prenom);
+        internal Enseignant ToEnseignant() => new Enseignant(nom: Nom, prenom: Prenom);
 
-        public static EnseignantDto CreateFromEnseignant(Enseignant enseignant) => new EnseignantDto
+        internal static EnseignantDto CreateFromEnseignant(Enseignant enseignant) => new EnseignantDto
         {
             Nom = enseignant.Nom,
             Prenom = enseignant.Prenom,
